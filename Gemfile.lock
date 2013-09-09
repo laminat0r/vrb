@@ -1,16 +1,53 @@
+PATH
+  remote: .
+  specs:
+    vrb (0.0.2)
+      rbvmomi
+      table_print
+
 GEM
   remote: https://rubygems.org/
   specs:
-    builder (3.0.0)
-    nokogiri (1.5.5)
-    rbvmomi (1.5.1)
+    builder (3.2.2)
+    capistrano (2.15.5)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    capistrano-ext (1.2.1)
+      capistrano (>= 1.0.0)
+    clip (1.5.0)
+      capistrano (>= 2.6.0)
+      capistrano-ext (>= 1.2.1)
+      colorize
+      unix-crypt
+    colorize (0.5.8)
+    highline (1.6.19)
+    mini_portile (0.5.1)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.8)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
+    rake (10.1.0)
+    rbvmomi (1.6.0)
       builder
       nokogiri (>= 1.4.1)
       trollop
-    trollop (1.16.2)
+    table_print (1.1.5)
+    trollop (2.0)
+    unix-crypt (1.1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  rbvmomi
+  bundler
+  clip
+  rake
+  vrb!
