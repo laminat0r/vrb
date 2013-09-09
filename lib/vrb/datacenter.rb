@@ -11,7 +11,7 @@ module Vrb
     attr_reader :mob, :parent_mob
 
     def get_cluster(name)
-      mobs = self.list_clusters(return_as_mobs = true)
+      mobs = self.list_clusters(true) # return_as_mobs = true
       cl_mob = mobs.find { |mob| mob.name == name } or fail "Sorry!"
       Cluster.new(@mob, cl_mob)
     end
@@ -23,6 +23,11 @@ module Vrb
       else
         return mobs.collect { |mob| mob.name }
       end
+    end
+
+    def get_vm(name)
+      vm_mob = @mob.find_vm(name) or fail "vm not found"
+      VM.new(@mob, vm_mob)
     end
   end
 end
