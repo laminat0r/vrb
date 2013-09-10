@@ -1,22 +1,14 @@
-## Vrb::Host
-##
-## usage:
-##   vm.list_vms
-##     => ['vm1', 'vm2']
-##   vm.get_vm('vm1')
-##     => Vrb::VM('vm1')
+# Vrb::Host
+#
 module Vrb
   class Host < VrbObject
-
+    #TODO pad this class out with info about a Host
+    #
     attr_reader :mob, :parent_mob
 
-    def get_vm(name)
-      VM.new(@mob, name) or fail "Sorry!"
-    end
-
-    def list_vms
-      mobs = @mob.vm
-      mobs.collect { |mob| mob.name }
+    def initialize(parent_mob, self_mob)
+      @mob = self_mob
+      @parent_mob = parent_mob
     end
   end
 end

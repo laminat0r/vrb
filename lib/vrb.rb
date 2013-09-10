@@ -1,5 +1,4 @@
 module Vrb
-
   require 'rbvmomi'
   require 'fileutils'
   require 'yaml'
@@ -10,5 +9,5 @@ module Vrb
   require "vrb/cluster"
   require "vrb/host"
   require "vrb/vm"
-
+  require "vrb/version"
 end
