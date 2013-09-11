@@ -42,7 +42,7 @@ module Vrb
         end
 
         nic_name = n.deviceInfo.label
-        nic_friendly_name = nic_name.sub(/Network\ adapter\s+/, '')
+        nic_friendly_name = nic_name.sub(/Network\ adapter\s+/, '').to_i
 
         nics[nic_friendly_name] = {
           :name => nic_name,
