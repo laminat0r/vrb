@@ -36,6 +36,7 @@ module Vrb
       i = @mob.serviceInstance.content.about
       info << "vcenterHost: #{VCENTER_SERVER}"
       info << "vcenterTime: #{@mob.serviceInstance.serverClock}"
+      info << "vcenterUser: #{VCENTER_USERNAME}"
       info << "apiType: #{i.apiType}"
       info << "apiVersion: #{i.apiVersion}"
       info << "build: #{i.build}"
