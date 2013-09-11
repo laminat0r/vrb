@@ -2,6 +2,10 @@ module Vrb
 
   require 'yaml'
 
+  #FIXME: do not hardcode the config file
+  #FIXME: have our own config file
+  #FIXME: all these constants seem redundant
+  #
   VIM = RbVmomi::VIM
   VCENTER_CONFIG_FILE = '~/.fog'
 
@@ -29,8 +33,6 @@ module Vrb
     )
     end
 
-    #TODO: this should return a bunch of info about the vcenter connected to
-    #
     def inspect
       info = []
       i = @mob.serviceInstance.content.about
@@ -52,6 +54,21 @@ module Vrb
       info << "vendor: #{i.vendor}"
       info << "version: #{i.version}"
       info
+    end
+
+    def get_datacenter(name)
+      dcs = list_datacenters(true) #true = return_as_mobs and not String
+      dc_mob = dcs.select { |d| d.name =~ /#{name}/ }.first or fail "Sorry! #{name} is unknown"
+      Datacenter.new(@mob, dc_mob)
+    end
+
+    def list_datacenters(return_as_mobs = false)
+      if return_as_mobs
+        @mob.rootFolder.children.grep(VIM::Datacenter)
+      else
+        mobs = @mob.rootFolder.children.grep(VIM::Datacenter)
+        mobs.collect { |mob| mob.name }
+      end
     end
   end
 end
