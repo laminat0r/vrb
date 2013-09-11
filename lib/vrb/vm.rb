@@ -25,5 +25,11 @@ module Vrb
         @is_a_template  = nil
       end
     end
+
+    private
+
+    def list_nics
+      nil
+    end
   end
 end
