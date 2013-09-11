@@ -56,6 +56,10 @@ module Vrb
       info
     end
 
+    def to_s
+      "#{VCENTER_USERNAME}@#{VCENTER_SERVER}"
+    end
+
     def get_datacenter(name)
       dcs = list_datacenters(true) #true = return_as_mobs and not String
       dc_mob = dcs.select { |d| d.name =~ /#{name}/ }.first or fail "Sorry! #{name} is unknown"
