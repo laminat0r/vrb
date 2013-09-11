@@ -26,6 +26,13 @@ module Vrb
       end
     end
 
+    def ram=(new_ram)
+        fail "memory must be a multiple of 4MB" unless ( new_ram % 4 ) == 0
+        fail "VM needs to be off" unless vm.summary.runtime.powerState == 'poweredOff'
+        spec = { :memoryMB => new_ram }
+        @mob.ReconfigVM_Task(:spec => spec)
+    end
+
     private
 
     def list_nics
