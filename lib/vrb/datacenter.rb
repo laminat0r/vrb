@@ -9,5 +9,10 @@ module Vrb
       @mob = self_mob
       @parent_mob = parent_mob
     end
+
+    def get_vm(name)
+      vm_mob = @mob.find_vm(name) or fail "vm not found"
+      VM.new(@mob, vm_mob)
+    end
   end
 end
