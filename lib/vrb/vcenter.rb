@@ -16,21 +16,41 @@ module Vrb
     attr_reader :mob
 
     def initialize(
-        host     = VCENTER_SERVER,
-        user     = VCENTER_USERNAME,
-        password = VCENTER_PASSWORD
-      )
+      host     = VCENTER_SERVER,
+      user     = VCENTER_USERNAME,
+      password = VCENTER_PASSWORD
+    )
 
-      @mob = VIM.connect(
-        :host => host,
-        :user => user,
-        :password => password,
-        :insecure => true
-      )
+    @mob = VIM.connect(
+      :host => host,
+      :user => user,
+      :password => password,
+      :insecure => true
+    )
     end
 
+    #TODO: this should return a bunch of info about the vcenter connected to
+    #
     def inspect
-      "#{@mob.serviceInstance.serverClock}: #{self.class}(#{@mob.host})"
+      info = []
+      i = @mob.serviceInstance.content.about
+      info << "vcenterHost: #{VCENTER_SERVER}"
+      info << "vcenterTime: #{@mob.serviceInstance.serverClock}"
+      info << "apiType: #{i.apiType}"
+      info << "apiVersion: #{i.apiVersion}"
+      info << "build: #{i.build}"
+      info << "fullName: #{i.fullName}"
+      info << "instanceUuid: #{i.instanceUuid}"
+      info << "licenseProductName: #{i.licenseProductName}"
+      info << "licenseProductVersion: #{i.licenseProductVersion}"
+      info << "localeBuild: #{i.localeBuild}"
+      info << "localeVersion: #{i.localeVersion}"
+      info << "name: #{i.name}"
+      info << "osType: #{i.osType}"
+      info << "productLineId: #{i.productLineId}"
+      info << "vendor: #{i.vendor}"
+      info << "version: #{i.version}"
+      info
     end
   end
 end
