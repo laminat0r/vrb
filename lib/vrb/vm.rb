@@ -3,7 +3,7 @@
 module Vrb
   class VM < VrbObject
 
-    attr_reader :mob, :tools_status, :os, :ip, :host, :is_a_template, :nics, :serviceid, :ram, :cpu
+    attr_reader :mob, :tools_status, :os, :ip, :host, :is_a_template, :nics, :serviceid, :ram, :cpu, :state
 
     def initialize(parent_mob, self_mob)
       @mob = self_mob
@@ -18,6 +18,7 @@ module Vrb
         @ip             = @mob.guest.ipAddress
         @host           = @mob.runtime.host.name
         @is_a_template  = @mob.summary.config.template
+        @state          = @mob.guest.guestState
       rescue
         @os             = nil
         @ip             = nil
@@ -29,8 +30,42 @@ module Vrb
     def ram=(new_ram)
         fail "memory must be a multiple of 4MB" unless ( new_ram % 4 ) == 0
         fail "VM needs to be off" unless vm.summary.runtime.powerState == 'poweredOff'
+        fail "VM already has #{new_ram} amount of ram" if new_ram == @ram
         spec = { :memoryMB => new_ram }
         @mob.ReconfigVM_Task(:spec => spec)
+    end
+
+    def cpu=(new_cpu)
+        fail "VM already has #{new_cpu} CPUs" if new_ram == @cpu
+        spec = { :numCPU => new_cpu }
+        @mob.ReconfigVM_Task(:spec => spec)
+    end
+
+    def off!
+      fail "Um...VM needs to be on first." unless vm.summary.runtime.powerState == 'poweredOn'
+      @mob.PowerOffVM_Task.wait_for_completion
+    end
+
+    def on!
+      fail "Um...VM needs to be off first." unless vm.summary.runtime.powerState == 'poweredOff'
+      @mob.PowerOnVM_Task.wait_for_completion
+    end
+
+    def reboot!
+      fail "Um...VM needs to be on first." unless vm.summary.runtime.powerState == 'poweredOn'
+      fail "vm tools not installed or not running" unless @tools_status == 'toolsOk'
+      @mob.RebootGuest.wait_for_completion
+    end
+
+    def shutdown!
+      fail "Um...VM needs to be on first." unless vm.summary.runtime.powerState == 'poweredOn'
+      fail "vm tools not installed or not running" unless @tools_status == 'toolsOk'
+      @mob.ShutdownGuest.wait_for_completion
+    end
+
+    def reset!
+      fail "Um...VM needs to be on first." unless vm.summary.runtime.powerState == 'poweredOn'
+      @mob.ResetVM_Task.wait_for_completion
     end
 
     private
