@@ -36,7 +36,7 @@ module Vrb
     end
 
     def cpu=(new_cpu)
-        fail "VM already has #{new_cpu} CPUs" if new_ram == @cpu
+        fail "VM already has #{new_cpu} CPUs" if new_cpu == @cpu
         spec = { :numCPU => new_cpu }
         @mob.ReconfigVM_Task(:spec => spec)
     end
