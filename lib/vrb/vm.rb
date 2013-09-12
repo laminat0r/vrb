@@ -32,13 +32,13 @@ module Vrb
         fail "VM needs to be off" unless vm.summary.runtime.powerState == 'poweredOff'
         fail "VM already has #{new_ram} amount of ram" if new_ram == @ram
         spec = { :memoryMB => new_ram }
-        @mob.ReconfigVM_Task(:spec => spec)
+        @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
     end
 
     def cpu=(new_cpu)
         fail "VM already has #{new_cpu} CPUs" if new_cpu == @cpu
         spec = { :numCPUs => new_cpu }
-        @mob.ReconfigVM_Task(:spec => spec)
+        @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
     end
 
     def off!
