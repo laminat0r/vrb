@@ -1,8 +1,8 @@
-# Vrb::Host
+# Vrb::ResourcePool
 #
 module Vrb
-  class Host < VrbObject
-    #TODO pad this class out with info about a Host
+  class ResourcePool < VrbObject
+    #TODO pad this class out with info about a ResourcePool
     #
     attr_reader :mob, :parent_mob
 

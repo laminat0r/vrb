@@ -7,7 +7,7 @@ module Vrb
     end
 
     def inspect
-      return "#{self.class}(#{@mob.name})"
+      "#{self.class}(#{@mob.name})"
     end
   end
 

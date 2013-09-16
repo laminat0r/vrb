@@ -1,7 +1,11 @@
- module Vrb
+module Vrb
 
   require 'yaml'
 
+  #FIXME: do not hardcode the config file
+  #FIXME: have our own config file
+  #FIXME: all these constants seem redundant
+  #
   VIM = RbVmomi::VIM
   VCENTER_CONFIG_FILE = '~/.fog'
 
@@ -15,36 +19,60 @@
 
     attr_reader :mob
 
-    def initialize( host     = VCENTER_SERVER,
-                    user     = VCENTER_USERNAME,
-                    password = VCENTER_PASSWORD )
-      @mob = VIM.connect  :host     => host,
-                          :user     => user,
-                          :password => password,
-                          :insecure => true
+    def initialize(
+      host     = VCENTER_SERVER,
+      user     = VCENTER_USERNAME,
+      password = VCENTER_PASSWORD
+    )
+
+    @mob = VIM.connect(
+      :host => host,
+      :user => user,
+      :password => password,
+      :insecure => true
+    )
     end
 
     def inspect
-      return "#{self.class}(#{@mob.host})"
+      info = []
+      i = @mob.serviceInstance.content.about
+      info << "vcenterHost: #{VCENTER_SERVER}"
+      info << "vcenterTime: #{@mob.serviceInstance.serverClock}"
+      info << "vcenterUser: #{VCENTER_USERNAME}"
+      info << "apiType: #{i.apiType}"
+      info << "apiVersion: #{i.apiVersion}"
+      info << "build: #{i.build}"
+      info << "fullName: #{i.fullName}"
+      info << "instanceUuid: #{i.instanceUuid}"
+      info << "licenseProductName: #{i.licenseProductName}"
+      info << "licenseProductVersion: #{i.licenseProductVersion}"
+      info << "localeBuild: #{i.localeBuild}"
+      info << "localeVersion: #{i.localeVersion}"
+      info << "name: #{i.name}"
+      info << "osType: #{i.osType}"
+      info << "productLineId: #{i.productLineId}"
+      info << "vendor: #{i.vendor}"
+      info << "version: #{i.version}"
+      info
     end
 
-    def get_vm_by_path(path)
-      vm_mob = @mob.searchIndex.FindByInventoryPath(:inventoryPath => path)
-      VM.new(@mob, vm_mob)
+    def to_s
+      "#{VCENTER_USERNAME}@#{VCENTER_SERVER}"
     end
 
-    def get_host(name)
-      puts "Not implemented yet"
-    end
-
-    def get_datacenter(name)
-      dc_mob = @mob.serviceInstance.find_datacenter(name) or fail "Sorry!"
+    def datacenter(name)
+      dcs = datacenters(true) #true = return_as_mobs and not String
+      dc_mob = dcs.select { |d| d.name =~ /#{name}/ }.first or fail "Sorry! #{name} is unknown"
       Datacenter.new(@mob, dc_mob)
     end
 
-    def list_datacenters
-      mobs = @mob.rootFolder.children.grep(VIM::Datacenter)
-      mobs.collect { |mob| mob.name }
+    def datacenters(return_as_mobs = false)
+      if return_as_mobs
+        @mob.rootFolder.children.grep(VIM::Datacenter)
+      else
+        mobs = @mob.rootFolder.children.grep(VIM::Datacenter)
+        mobs.collect { |mob| mob.name }
+      end
     end
   end
 end
