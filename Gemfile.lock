@@ -1,16 +1,27 @@
+PATH
+  remote: .
+  specs:
+    vrb (0.0.2)
+      rbvmomi
+
 GEM
   remote: https://rubygems.org/
   specs:
-    builder (3.0.0)
-    nokogiri (1.5.5)
-    rbvmomi (1.5.1)
+    builder (3.2.2)
+    mini_portile (0.5.1)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
+    rake (10.1.0)
+    rbvmomi (1.6.0)
       builder
       nokogiri (>= 1.4.1)
       trollop
-    trollop (1.16.2)
+    trollop (2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  rbvmomi
+  bundler
+  rake
+  vrb!
