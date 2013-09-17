@@ -61,12 +61,12 @@ module Vrb
     end
 
     def datacenter(name)
-      dcs = datacenters(true) #true = return_as_mobs and not String
+      dcs = datacenters
       dc_mob = dcs.select { |d| d.name =~ /#{name}/ }.first or fail "Sorry! #{name} is unknown"
       Datacenter.new(@mob, dc_mob)
     end
 
-    def datacenters(return_as_mobs = false)
+    def datacenters(return_as_mobs = true)
       if return_as_mobs
         @mob.rootFolder.children.grep(VIM::Datacenter)
       else
