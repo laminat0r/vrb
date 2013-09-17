@@ -21,9 +21,8 @@ module Vrb
 
     def resource_pool(name)
       mobs = self.resource_pools
-      rp_mob = mobs.find { |mob| mob.name =~ /#{name}/ }.first or fail "Sorry!"
+      rp_mob = mobs.select { |mob| mob.name =~ /#{name}/ }.first or fail "Sorry!"
       ResourcePool.new(@mob,rp_mob)
     end
-
   end
 end

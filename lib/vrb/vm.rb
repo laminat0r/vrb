@@ -68,6 +68,11 @@ module Vrb
       @mob.ResetVM_Task.wait_for_completion
     end
 
+    def clone(dst, opts={})
+      puts "Clone #{@serviceid} to #{dst}."
+      pp opts
+    end
+
     private
 
     def list_nics
