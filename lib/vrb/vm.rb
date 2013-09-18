@@ -82,18 +82,16 @@ module Vrb
       clone_spec.powerOn    = opts[:poweron]
       clone_spec.template   = opts[:isatemplate]
 
+      task = @mob.CloneVM_Task(
+        :folder => dst_dir,
+        :name   => opts[:serviceid],
+        :spec   => clone_spec
+      )
+
       if opts[:wait]
-        @mob.CloneVM_Task(
-          :folder => dst_dir,
-          :name   => opts[:serviceid],
-          :spec   => clone_spec
-        ).wait_for_completion
+        task.wait_for_completion
       else
-        @mob.CloneVM_Task(
-          :folder => dst_dir,
-          :name   => opts[:serviceid],
-          :spec   => clone_spec
-        )
+        task
       end
     end
 
