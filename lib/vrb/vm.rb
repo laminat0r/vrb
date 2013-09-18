@@ -28,17 +28,17 @@ module Vrb
     end
 
     def ram=(new_ram)
-        fail "memory must be a multiple of 4MB" unless ( new_ram % 4 ) == 0
-        fail "VM needs to be off" unless vm.summary.runtime.powerState == 'poweredOff'
-        fail "VM already has #{new_ram} amount of ram" if new_ram == @ram
-        spec = { :memoryMB => new_ram }
-        @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
+      fail "memory must be a multiple of 4MB" unless ( new_ram % 4 ) == 0
+      fail "VM needs to be off" unless vm.summary.runtime.powerState == 'poweredOff'
+      fail "VM already has #{new_ram} amount of ram" if new_ram == @ram
+      spec = { :memoryMB => new_ram }
+      @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
     end
 
     def cpu=(new_cpu)
-        fail "VM already has #{new_cpu} CPUs" if new_cpu == @cpu
-        spec = { :numCPUs => new_cpu }
-        @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
+      fail "VM already has #{new_cpu} CPUs" if new_cpu == @cpu
+      spec = { :numCPUs => new_cpu }
+      @mob.ReconfigVM_Task(:spec => spec).wait_for_completion
     end
 
     def off!
@@ -68,9 +68,26 @@ module Vrb
       @mob.ResetVM_Task.wait_for_completion
     end
 
-    def clone(dst, opts={})
-      puts "Clone #{@serviceid} to #{dst}."
-      pp opts
+    def clone(dst_dir, rp, opts={})
+      config_spec           = RbVmomi::VIM::VirtualMachineConfigSpec()
+      config_spec.numCPUs   = opts[:cpu]
+      config_spec.memoryMB  = opts[:ram]
+
+      relocation_spec       = RbVmomi::VIM.VirtualMachineRelocateSpec
+      relocation_spec.pool  = rp.mob
+
+      clone_spec            = RbVmomi::VIM.VirtualMachineCloneSpec
+      clone_spec.location   = relocation_spec
+      clone_spec.config     = config_spec
+      clone_spec.powerOn    = opts[:poweron]
+      clone_spec.template   = opts[:isaitemplate]
+
+      task = @mob.CloneVM_Task(:folder => opts[:dst_dir], :name => opts[:serviceid], :spec => clone_spec)
+      if opts[:wait]
+        task.wait_for_completion
+      else
+        task
+      end
     end
 
     private
