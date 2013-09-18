@@ -80,13 +80,20 @@ module Vrb
       clone_spec.location   = relocation_spec
       clone_spec.config     = config_spec
       clone_spec.powerOn    = opts[:poweron]
-      clone_spec.template   = opts[:isaitemplate]
+      clone_spec.template   = opts[:isatemplate]
 
-      task = @mob.CloneVM_Task(:folder => opts[:dst_dir], :name => opts[:serviceid], :spec => clone_spec)
       if opts[:wait]
-        task.wait_for_completion
+        @mob.CloneVM_Task(
+          :folder => dst_dir,
+          :name   => opts[:serviceid],
+          :spec   => clone_spec
+        ).wait_for_completion
       else
-        task
+        @mob.CloneVM_Task(
+          :folder => dst_dir,
+          :name   => opts[:serviceid],
+          :spec   => clone_spec
+        )
       end
     end
 
